@@ -4,6 +4,7 @@
 
 package agentesnmp;
 
+import java.awt.Component;
 import java.util.Collection;
 import javax.swing.JComboBox;
 import javax.swing.JList;
@@ -22,6 +23,8 @@ import javax.swing.Timer;
 import javax.swing.Icon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 /**
  * The application's main frame.
@@ -32,6 +35,7 @@ public class AgenteSNMPView extends FrameView {
     private Agente agente;
     private DefaultListModel dlModel;
     private int tempo;
+    private JFrame frame = new JFrame("Exemplo botao");
 
     public AgenteSNMPView(SingleFrameApplication app) {
         super(app);
@@ -136,9 +140,23 @@ public class AgenteSNMPView extends FrameView {
     }
 
     @Action public void addAgentes() {
+        boolean duplicado = false;
+        String ip = jTextField1.getText();
+        
+        for(Agente a: lstAgentes){
+            if(a.getIp().equals(ip)){
+                showMessage("IP duplicado!", frame, "Erro");
+                duplicado = true;
+                break;
+            }
+        }
+        
+        if(!duplicado) {
         agente = new Agente(jTextField1.getText(), Integer.parseInt(jTextField2.getText()), (String)jComboBox1.getSelectedItem());
         lstAgentes.add(agente);
         dlModel.addElement(agente.getIp());
+        }
+
         jTextField2.setText("");
         jTextField1.setText("");
         jComboBox1.setSelectedItem("public");
@@ -146,6 +164,10 @@ public class AgenteSNMPView extends FrameView {
 
     @Action public void gereciar() {
         
+    }
+
+    private  void showMessage(String message, Component parent, String title){
+        JOptionPane.showMessageDialog(parent, message, title, JOptionPane.ERROR_MESSAGE);
     }
 
     /** This method is called from within the constructor to
