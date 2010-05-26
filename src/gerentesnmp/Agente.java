@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package agentesnmp;
+package gerentesnmp;
 
 /**
  *
@@ -15,7 +15,7 @@ public class Agente {
     private int tempo;
     private String comunidade;
 
-    public Agente(String ip, int tempo, String comunidade) {
+    public Agente(String ip, String comunidade, int tempo) {
         this.ip = ip;
         this.tempo = tempo;
         this.comunidade = comunidade;

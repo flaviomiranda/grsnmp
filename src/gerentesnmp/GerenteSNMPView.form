@@ -114,7 +114,7 @@
         <Component class="javax.swing.JButton" name="jButton1">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="agentesnmp.AgenteSNMPView" id="addAgentes" methodName="addAgentes"/>
+              <action class="gerentesnmp.AgenteSNMPView" id="addAgentes" methodName="addAgentes"/>
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="btnAddIP.text"/>
             <Property name="toolTipText" type="java.lang.String" resourceKey="btnAddIP.toolTipText"/>
@@ -131,7 +131,7 @@
         <Component class="javax.swing.JButton" name="jButton2">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="agentesnmp.AgenteSNMPView" id="gereciar" methodName="gereciar"/>
+              <action class="gerentesnmp.AgenteSNMPView" id="gereciar" methodName="gereciar"/>
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="btnGerenciar.text"/>
             <Property name="toolTipText" type="java.lang.String" resourceKey="btnGerenciar.toolTipText"/>
@@ -177,7 +177,7 @@
         <Component class="javax.swing.JButton" name="jButton4">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="agentesnmp.AgenteSNMPView" id="delAgentes" methodName="delAgentes"/>
+              <action class="gerentesnmp.AgenteSNMPView" id="delAgentes" methodName="delAgentes"/>
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="btnExcluirIp.text"/>
             <Property name="name" type="java.lang.String" value="btnExcluirIp" noResource="true"/>
@@ -207,7 +207,7 @@
         <Component class="javax.swing.JButton" name="jButton3">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="agentesnmp.AgenteSNMPView" id="fecharAgente" methodName="fecharAgente"/>
+              <action class="gerentesnmp.GerenteSNMPView" id="fecharGerente" methodName="fecharGerente"/>
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="btnFechar.text"/>
             <Property name="toolTipText" type="java.lang.String" resourceKey="btnFechar.toolTipText"/>
@@ -262,7 +262,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="aboutMenuItem">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="agentesnmp.AgenteSNMPView" id="showAboutBox" methodName="showAboutBox"/>
+                  <action class="gerentesnmp.AgenteSNMPView" id="showAboutBox" methodName="showAboutBox"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="aboutMenuItem" noResource="true"/>
               </Properties>
