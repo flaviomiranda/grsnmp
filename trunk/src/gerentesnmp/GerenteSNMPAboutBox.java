@@ -2,13 +2,13 @@
  * AgenteSNMPAboutBox.java
  */
 
-package agentesnmp;
+package gerentesnmp;
 
 import org.jdesktop.application.Action;
 
-public class AgenteSNMPAboutBox extends javax.swing.JDialog {
+public class GerenteSNMPAboutBox extends javax.swing.JDialog {
 
-    public AgenteSNMPAboutBox(java.awt.Frame parent) {
+    public GerenteSNMPAboutBox(java.awt.Frame parent) {
         super(parent);
         initComponents();
         getRootPane().setDefaultButton(closeButton);
@@ -38,13 +38,13 @@ public class AgenteSNMPAboutBox extends javax.swing.JDialog {
         javax.swing.JLabel imageLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(agentesnmp.AgenteSNMPApp.class).getContext().getResourceMap(AgenteSNMPAboutBox.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(gerentesnmp.GerenteSNMPApp.class).getContext().getResourceMap(GerenteSNMPAboutBox.class);
         setTitle(resourceMap.getString("title")); // NOI18N
         setModal(true);
         setName("aboutBox"); // NOI18N
         setResizable(false);
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(agentesnmp.AgenteSNMPApp.class).getContext().getActionMap(AgenteSNMPAboutBox.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(gerentesnmp.GerenteSNMPApp.class).getContext().getActionMap(GerenteSNMPAboutBox.class, this);
         closeButton.setAction(actionMap.get("closeAboutBox")); // NOI18N
         closeButton.setText(resourceMap.getString("closeButton.text")); // NOI18N
         closeButton.setName("closeButton"); // NOI18N

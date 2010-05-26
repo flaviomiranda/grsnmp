@@ -2,7 +2,7 @@
  * AgenteSNMPView.java
  */
 
-package agentesnmp;
+package gerentesnmp;
 
 import java.awt.Component;
 import org.jdesktop.application.Action;
@@ -24,7 +24,7 @@ import javax.swing.table.DefaultTableModel;
 /**
  * The application's main frame.
  */
-public class AgenteSNMPView extends FrameView {
+public class GerenteSNMPView extends FrameView {
 
     private List<Agente> lstAgentes;
     private Agente agente;
@@ -32,7 +32,7 @@ public class AgenteSNMPView extends FrameView {
     private int tempo;
     private JFrame frame = new JFrame("Mensagem de erro.");
 
-    public AgenteSNMPView(SingleFrameApplication app) {
+    public GerenteSNMPView(SingleFrameApplication app) {
         super(app);
 
         lstAgentes = new ArrayList<Agente>();
@@ -122,14 +122,14 @@ public class AgenteSNMPView extends FrameView {
     @Action
     public void showAboutBox() {
         if (aboutBox == null) {
-            JFrame mainFrame = AgenteSNMPApp.getApplication().getMainFrame();
-            aboutBox = new AgenteSNMPAboutBox(mainFrame);
+            JFrame mainFrame = GerenteSNMPApp.getApplication().getMainFrame();
+            aboutBox = new GerenteSNMPAboutBox(mainFrame);
             aboutBox.setLocationRelativeTo(mainFrame);
         }
-        AgenteSNMPApp.getApplication().show(aboutBox);
+        GerenteSNMPApp.getApplication().show(aboutBox);
     }
 
-    @Action public void fecharAgente() {
+    @Action public void fecharGerente() {
         System.exit(0);
     }
 
@@ -137,8 +137,8 @@ public class AgenteSNMPView extends FrameView {
         boolean duplicado = false;
         String ip = jTextField1.getText();
         
-        for(Agente a: lstAgentes){
-            if(a.getIp().equals(ip)){
+        for(int i =0; i < dtModel.getRowCount(); i++){
+            if(dtModel.getValueAt(i, 0).equals(ip)){
                 showMessage("IP duplicado!", frame, "Erro");
                 duplicado = true;
                 break;
@@ -146,9 +146,7 @@ public class AgenteSNMPView extends FrameView {
         }
 
         if(!duplicado) {
-        agente = new Agente(jTextField1.getText(), Integer.parseInt(jTextField2.getText()), (String)jComboBox1.getSelectedItem());
-        lstAgentes.add(agente);
-        dtModel.addRow(new Object [] {agente.getIp(), agente.getComunidade(), Integer.toString(agente.getTempo())});
+            dtModel.addRow(new Object [] {jTextField1.getText(), (String)jComboBox1.getSelectedItem(), Integer.parseInt(jTextField2.getText())});
         }
 
         jTextField2.setText("");
@@ -160,13 +158,16 @@ public class AgenteSNMPView extends FrameView {
         int[] l = jTable1.getSelectedRows();
         for(int i = (l.length-1); i >= 0; --i) {
             dtModel.removeRow(l[i]);
-            lstAgentes.remove(l[i]);
         }
-        return;
     }
 
     @Action public void gereciar() {
-        
+        for(int i = 0; i < dtModel.getRowCount(); i++)
+        {
+            agente = new Agente(dtModel.getValueAt(i, 0).toString(), dtModel.getValueAt(i, 1).toString(), (Integer)dtModel.getValueAt(i, 2));
+            lstAgentes.add(agente);
+        }
+        return;
     }
 
     private  void showMessage(String message, Component parent, String title){
@@ -211,12 +212,12 @@ public class AgenteSNMPView extends FrameView {
         mainPanel.setPreferredSize(new java.awt.Dimension(425, 210));
         mainPanel.setRequestFocusEnabled(false);
 
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(agentesnmp.AgenteSNMPApp.class).getContext().getResourceMap(AgenteSNMPView.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(gerentesnmp.GerenteSNMPApp.class).getContext().getResourceMap(GerenteSNMPView.class);
         jTextField1.setText(resourceMap.getString("txtIP.text")); // NOI18N
         jTextField1.setToolTipText(resourceMap.getString("txtIP.toolTipText")); // NOI18N
         jTextField1.setName("txtIP"); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(agentesnmp.AgenteSNMPApp.class).getContext().getActionMap(AgenteSNMPView.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(gerentesnmp.GerenteSNMPApp.class).getContext().getActionMap(GerenteSNMPView.class, this);
         jButton1.setAction(actionMap.get("addAgentes")); // NOI18N
         jButton1.setText(resourceMap.getString("btnAddIP.text")); // NOI18N
         jButton1.setToolTipText(resourceMap.getString("btnAddIP.toolTipText")); // NOI18N
@@ -259,7 +260,7 @@ public class AgenteSNMPView extends FrameView {
     jTable1.setName("jTable1"); // NOI18N
     jScrollPane2.setViewportView(jTable1);
 
-    jButton3.setAction(actionMap.get("fecharAgente")); // NOI18N
+    jButton3.setAction(actionMap.get("fecharGerente")); // NOI18N
     jButton3.setText(resourceMap.getString("btnFechar.text")); // NOI18N
     jButton3.setToolTipText(resourceMap.getString("btnFechar.toolTipText")); // NOI18N
     jButton3.setName("btnFechar"); // NOI18N
