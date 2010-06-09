@@ -7,7 +7,7 @@ package gerentesnmp;
 
 /**
  *
- * @author christianfs
+ * @author 
  */
 public class Agente {
 
