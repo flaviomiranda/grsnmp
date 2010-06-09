@@ -28,7 +28,7 @@ import org.snmp4j.util.TableUtils;
 
 /**
  *
- * @author christianfs
+ * @author 
  */
 public class Gerente {
     private String address;
