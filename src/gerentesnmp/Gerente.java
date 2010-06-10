@@ -32,11 +32,16 @@ import org.snmp4j.util.TableUtils;
  */
 public class Gerente {
     private String address;
+    private String comunidade;
+    private int tempo;
     private Snmp snmp;
 
-    public Gerente(String address) {
+    public Gerente(Agente ag) {
         super();
-        this.address = address;
+        //this.address = address;
+        this.address = ag.getIp();
+        this.comunidade = ag.getComunidade();
+        this.tempo = ag.getTempo();
         try {
                 start();
         } catch (IOException e) {
@@ -65,7 +70,7 @@ public class Gerente {
     public ResponseEvent get(OID oids[]) throws IOException {
         PDU pdu = new PDU();
         for (OID oid : oids) {
-               pdu.add(new VariableBinding(oid));
+               pdu.addOID(new VariableBinding(oid));
         }
 
         pdu.setType(PDU.GET);
@@ -80,7 +85,8 @@ public class Gerente {
     private Target getTarget() {
         Address targetAddress = GenericAddress.parse(address);
         CommunityTarget target = new CommunityTarget();
-        target.setCommunity(new OctetString("public"));
+        //target.setCommunity(new OctetString("public"));
+        target.setCommunity(new OctetString(comunidade));
         target.setAddress(targetAddress);
         target.setRetries(2);
         target.setTimeout(1500);

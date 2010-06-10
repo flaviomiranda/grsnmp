@@ -12,6 +12,7 @@ import org.jdesktop.application.FrameView;
 import org.jdesktop.application.TaskMonitor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Timer;
@@ -20,6 +21,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import org.snmp4j.smi.OID;
 
 /**
  * The application's main frame.
@@ -39,6 +41,8 @@ public class GerenteSNMPView extends FrameView {
         initComponents();
         dtModel = (DefaultTableModel)jTable1.getModel();
         tempo = 0;
+        jTextField1.setText("127.0.0.1/2001");
+        jTextField2.setText("3");
 
         // status bar initialization - message timeout, idle icon and busy animation, etc
         ResourceMap resourceMap = getResourceMap();
@@ -167,6 +171,16 @@ public class GerenteSNMPView extends FrameView {
             agente = new Agente(dtModel.getValueAt(i, 0).toString(), dtModel.getValueAt(i, 1).toString(), (Integer)dtModel.getValueAt(i, 2));
             lstAgentes.add(agente);
         }
+
+        //TODO: teste passando um OID
+        OID oid = new OID("1.3.6.1.2.1.1.1.0");
+        Gerente ger = new Gerente(lstAgentes.get(0));
+        try{
+            ger.getAsString(oid);
+        }
+        catch(IOException e)
+        {}
+
         return;
     }
 
