@@ -28,7 +28,7 @@ import org.snmp4j.util.TableUtils;
 
 /**
  *
- * @author 
+ * @author
  */
 public class Gerente {
     private String address;
@@ -83,7 +83,7 @@ public class Gerente {
     }
 
     private Target getTarget() {
-        Address targetAddress = GenericAddress.parse(address);
+        Address targetAddress = GenericAddress.parse("udp:" + address + "/161");
         CommunityTarget target = new CommunityTarget();
         //target.setCommunity(new OctetString("public"));
         target.setCommunity(new OctetString(comunidade));
