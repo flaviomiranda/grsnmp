@@ -41,7 +41,7 @@ public class GerenteSNMPView extends FrameView {
         initComponents();
         dtModel = (DefaultTableModel)jTable1.getModel();
         tempo = 0;
-        jTextField1.setText("127.0.0.1/2001");
+        jTextField1.setText("127.0.0.1");
         jTextField2.setText("3");
 
         // status bar initialization - message timeout, idle icon and busy animation, etc
@@ -166,6 +166,7 @@ public class GerenteSNMPView extends FrameView {
     }
 
     @Action public void gereciar() {
+        String resposta;
         for(int i = 0; i < dtModel.getRowCount(); i++)
         {
             agente = new Agente(dtModel.getValueAt(i, 0).toString(), dtModel.getValueAt(i, 1).toString(), (Integer)dtModel.getValueAt(i, 2));
@@ -176,12 +177,12 @@ public class GerenteSNMPView extends FrameView {
         OID oid = new OID("1.3.6.1.2.1.1.1.0");
         Gerente ger = new Gerente(lstAgentes.get(0));
         try{
-            ger.getAsString(oid);
+            resposta = ger.getAsString(oid);
+            System.out.println(resposta);
+            ger.stop();
         }
         catch(IOException e)
         {}
-
-        return;
     }
 
     private  void showMessage(String message, Component parent, String title){
