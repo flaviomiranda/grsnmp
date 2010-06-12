@@ -22,6 +22,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import org.snmp4j.smi.OID;
+import org.snmp4j.smi.VariableBinding;
 
 /**
  * The application's main frame.
@@ -166,23 +167,43 @@ public class GerenteSNMPView extends FrameView {
     }
 
     @Action public void gereciar() {
-        String resposta;
+        VariableBinding[] resposta;
         for(int i = 0; i < dtModel.getRowCount(); i++)
         {
             agente = new Agente(dtModel.getValueAt(i, 0).toString(), dtModel.getValueAt(i, 1).toString(), (Integer)dtModel.getValueAt(i, 2));
             lstAgentes.add(agente);
         }
 
-        //TODO: teste passando um OID
-        OID oid = new OID("1.3.6.1.2.1.1.1.0");
+        //TODO: teste passando um OID new OID[]{oid}
+        List<OID> oids = new ArrayList<OID>();
+        OID sysDescr = new OID("1.3.6.1.2.1.1.1.0");
+        OID sysUpTime = new OID("1.3.6.1.2.1.1.3.0");
+        oids.add(sysDescr);
+        oids.add(sysUpTime);
+
         Gerente ger = new Gerente(lstAgentes.get(0));
-        try{
-            resposta = ger.getAsString(oid);
-            System.out.println(resposta);
-            ger.stop();
-        }
-        catch(IOException e)
-        {}
+
+//        while(true)
+//        {
+            try{
+                resposta = ger.get(oids);
+                for(VariableBinding var : resposta)
+                    System.out.println(var.toString());
+                ger.stop();
+            }
+            catch(IOException e)
+            {
+                System.out.println(e.getMessage());
+            }
+            
+//            try
+//            {
+//                Thread.sleep(tempo * 1000);
+//            }
+//            catch(InterruptedException e)
+//            {}
+
+//        }
     }
 
     private  void showMessage(String message, Component parent, String title){

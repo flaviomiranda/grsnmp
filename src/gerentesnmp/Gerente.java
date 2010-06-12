@@ -62,12 +62,12 @@ public class Gerente {
         transport.listen();
     }
 
-    public String getAsString(OID oid) throws IOException {
-        ResponseEvent event = get(new OID[]{oid});
-        return event.getResponse().get(0).getVariable().toString();
-    }
+//    public String getAsString(List<OID> oids) throws IOException {
+//        ResponseEvent event = get(oids);
+//        return event.getResponse().get(0).getVariable().toString();
+//    }
 
-    public ResponseEvent get(OID oids[]) throws IOException {
+    public VariableBinding[] get(List<OID> oids) throws IOException {
         PDU pdu = new PDU();
         for (OID oid : oids) {
                pdu.addOID(new VariableBinding(oid));
@@ -75,11 +75,19 @@ public class Gerente {
 
         pdu.setType(PDU.GET);
 
-        ResponseEvent event = snmp.send(pdu, getTarget(), null);
-        if(event != null) {
-               return event;
-        }
-        throw new RuntimeException("GET timed out");
+
+//        ResponseEvent event = snmp.send(pdu, getTarget(), null);
+//
+//        if(event != null) {
+//               return event;
+//        }
+
+        VariableBinding[] retorno = snmp.send(pdu, getTarget()).getResponse().toArray();
+
+        if(retorno != null)
+            return retorno;
+
+        throw new RuntimeException("GET timed out: " + pdu.getErrorStatusText());
     }
 
     private Target getTarget() {
