@@ -189,12 +189,15 @@ public class GerenteSNMPView extends FrameView {
                 resposta = ger.get(oids);
                 for(VariableBinding var : resposta)
                     System.out.println(var.toString());
-                ger.stop();
             }
             catch(IOException e)
             {
                 System.out.println(e.getMessage());
             }
+
+        OID ifTable = new OID("1.3.6.1.2.1.2.2");
+        OID[] oidTable = new OID[]{ifTable};
+        ger.getTableAsStrings(oidTable);
             
 //            try
 //            {
