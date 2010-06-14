@@ -167,7 +167,7 @@ public class GerenteSNMPView extends FrameView {
     }
 
     @Action public void gereciar() {
-        VariableBinding[] resposta;
+        VariableBinding[] respostaGet, respostaGetBulk;
         for(int i = 0; i < dtModel.getRowCount(); i++)
         {
             agente = new Agente(dtModel.getValueAt(i, 0).toString(), dtModel.getValueAt(i, 1).toString(), (Integer)dtModel.getValueAt(i, 2));
@@ -175,29 +175,43 @@ public class GerenteSNMPView extends FrameView {
         }
 
         //TODO: teste passando um OID new OID[]{oid}
-        List<OID> oids = new ArrayList<OID>();
+        List<OID> oidsGet = new ArrayList<OID>();
         OID sysDescr = new OID("1.3.6.1.2.1.1.1.0");
         OID sysUpTime = new OID("1.3.6.1.2.1.1.3.0");
-        oids.add(sysDescr);
-        oids.add(sysUpTime);
+        oidsGet.add(sysDescr);
+        oidsGet.add(sysUpTime);
 
-        Gerente ger = new Gerente(lstAgentes.get(0));
+        List<OID> oidsGetBulk = new ArrayList<OID>();
+        OID ifTable = new OID("1.3.6.1.2.1.2.2");
+        oidsGetBulk.add(ifTable);
 
 //        while(true)
 //        {
+            Gerente ger = new Gerente(lstAgentes.get(0));
             try{
-                resposta = ger.get(oids);
-                for(VariableBinding var : resposta)
+                respostaGet = ger.get(oidsGet);
+                for(VariableBinding var : respostaGet)
                     System.out.println(var.toString());
+
+                respostaGetBulk = ger.getBulk(oidsGetBulk, 0, 44);
+                for(VariableBinding var : respostaGetBulk)
+                    System.out.println(var.toString());
+
+                ger.stop();
             }
             catch(IOException e)
             {
                 System.out.println(e.getMessage());
             }
 
-        OID ifTable = new OID("1.3.6.1.2.1.2.2");
+        /*int i = 0;
         OID[] oidTable = new OID[]{ifTable};
-        ger.getTableAsStrings(oidTable);
+        List<List<String>> lstOIDS = ger.getTableAsStrings(oidTable);
+        for(List<String> var : lstOIDS)
+            for(String var1 : var){
+                i++;
+                System.out.println(i + ": " + var1);
+            }*/
             
 //            try
 //            {
@@ -205,7 +219,7 @@ public class GerenteSNMPView extends FrameView {
 //            }
 //            catch(InterruptedException e)
 //            {}
-
+//
 //        }
     }
 
