@@ -62,10 +62,10 @@ public class Gerente {
         transport.listen();
     }
 
-//    public String getAsString(List<OID> oids) throws IOException {
-//        ResponseEvent event = get(oids);
-//        return event.getResponse().get(0).getVariable().toString();
-//    }
+    /*public String getAsString(List<OID> oids) throws IOException {
+        ResponseEvent event = get(oids);
+        return event.getResponse().get(0).getVariable().toString();
+    }*/
 
     public VariableBinding[] get(List<OID> oids) throws IOException {
         PDU pdu = new PDU();
@@ -75,12 +75,23 @@ public class Gerente {
 
         pdu.setType(PDU.GET);
 
+        VariableBinding[] retorno = snmp.send(pdu, getTarget()).getResponse().toArray();
 
-//        ResponseEvent event = snmp.send(pdu, getTarget(), null);
-//
-//        if(event != null) {
-//               return event;
-//        }
+        if(retorno != null)
+            return retorno;
+
+        throw new RuntimeException("GET timed out: " + pdu.getErrorStatusText());
+    }
+
+    public VariableBinding[] getBulk(List<OID> oids, int nr, int mr) throws IOException {
+        PDU pdu = new PDU();
+        for (OID oid : oids) {
+               pdu.addOID(new VariableBinding(oid));
+        }
+
+        pdu.setType(PDU.GETBULK);
+        pdu.setNonRepeaters(nr);
+        pdu.setMaxRepetitions(mr);
 
         VariableBinding[] retorno = snmp.send(pdu, getTarget()).getResponse().toArray();
 
@@ -93,7 +104,6 @@ public class Gerente {
     private Target getTarget() {
         Address targetAddress = GenericAddress.parse("udp:" + address + "/161");
         CommunityTarget target = new CommunityTarget();
-        //target.setCommunity(new OctetString("public"));
         target.setCommunity(new OctetString(comunidade));
         target.setAddress(targetAddress);
         target.setRetries(2);
@@ -105,7 +115,7 @@ public class Gerente {
     /**
      * Normally this would return domain objects or something else than this...
      */
-    public List<List<String>> getTableAsStrings(OID[] oids) {
+    /*public List<List<String>> getTableAsStrings(OID[] oids) {
         TableUtils tUtils = new TableUtils(snmp, new DefaultPDUFactory());
 
         @SuppressWarnings("unchecked")
@@ -123,5 +133,5 @@ public class Gerente {
             }
         }
         return list;
-    }
+    }*/
 }
