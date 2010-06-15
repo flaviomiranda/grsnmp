@@ -12,12 +12,10 @@ package gerentesnmp;
 public class Agente {
 
     private String ip;
-    private int tempo;
     private String comunidade;
 
-    public Agente(String ip, String comunidade, int tempo) {
+    public Agente(String ip, String comunidade) {
         this.ip = ip;
-        this.tempo = tempo;
         this.comunidade = comunidade;
     }
 
@@ -36,13 +34,4 @@ public class Agente {
     public void setIp(String ip) {
         this.ip = ip;
     }
-
-    public int getTempo() {
-        return tempo;
-    }
-
-    public void setTempo(int tempo) {
-        this.tempo = tempo;
-    }
-
 }

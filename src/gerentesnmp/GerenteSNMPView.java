@@ -12,7 +12,6 @@ import org.jdesktop.application.FrameView;
 import org.jdesktop.application.TaskMonitor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Timer;
@@ -21,8 +20,6 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import org.snmp4j.smi.OID;
-import org.snmp4j.smi.VariableBinding;
 
 /**
  * The application's main frame.
@@ -33,6 +30,7 @@ public class GerenteSNMPView extends FrameView {
     private Agente agente;
     private DefaultTableModel dtModel;
     private int tempo;
+    private Gerenciador ger;
     private JFrame frame = new JFrame("Mensagem de erro.");
 
     public GerenteSNMPView(SingleFrameApplication app) {
@@ -43,7 +41,7 @@ public class GerenteSNMPView extends FrameView {
         dtModel = (DefaultTableModel)jTable1.getModel();
         tempo = 0;
         jTextField1.setText("127.0.0.1");
-        jTextField2.setText("3");
+        jTextField2.setText("7");
 
         // status bar initialization - message timeout, idle icon and busy animation, etc
         ResourceMap resourceMap = getResourceMap();
@@ -141,7 +139,7 @@ public class GerenteSNMPView extends FrameView {
     @Action public void addAgentes() {
         boolean duplicado = false;
         String ip = jTextField1.getText();
-        
+
         for(int i =0; i < dtModel.getRowCount(); i++){
             if(dtModel.getValueAt(i, 0).equals(ip)){
                 showMessage("IP duplicado!", frame, "Erro");
@@ -151,10 +149,9 @@ public class GerenteSNMPView extends FrameView {
         }
 
         if(!duplicado) {
-            dtModel.addRow(new Object [] {jTextField1.getText(), (String)jComboBox1.getSelectedItem(), Integer.parseInt(jTextField2.getText())});
+            dtModel.addRow(new Object [] {jTextField1.getText(), (String)jComboBox1.getSelectedItem()});
         }
 
-        jTextField2.setText("");
         jTextField1.setText("");
         jComboBox1.setSelectedItem("public");
     }
@@ -166,61 +163,22 @@ public class GerenteSNMPView extends FrameView {
         }
     }
 
-    @Action public void gereciar() {
-        VariableBinding[] respostaGet, respostaGetBulk;
+    @Action public void gereciar() throws InterruptedException {
+        tempo = Integer.parseInt(jTextField2.getText());
         for(int i = 0; i < dtModel.getRowCount(); i++)
         {
-            agente = new Agente(dtModel.getValueAt(i, 0).toString(), dtModel.getValueAt(i, 1).toString(), (Integer)dtModel.getValueAt(i, 2));
+            agente = new Agente(dtModel.getValueAt(i, 0).toString(), dtModel.getValueAt(i, 1).toString());
             lstAgentes.add(agente);
         }
 
-        //TODO: teste passando um OID new OID[]{oid}
-        List<OID> oidsGet = new ArrayList<OID>();
-        OID sysDescr = new OID("1.3.6.1.2.1.1.1.0");
-        OID sysUpTime = new OID("1.3.6.1.2.1.1.3.0");
-        oidsGet.add(sysDescr);
-        oidsGet.add(sysUpTime);
-
-        List<OID> oidsGetBulk = new ArrayList<OID>();
-        OID ifTable = new OID("1.3.6.1.2.1.2.2");
-        oidsGetBulk.add(ifTable);
-
-//        while(true)
-//        {
-            Gerente ger = new Gerente(lstAgentes.get(0));
-            try{
-                respostaGet = ger.get(oidsGet);
-                for(VariableBinding var : respostaGet)
-                    System.out.println(var.toString());
-
-                respostaGetBulk = ger.getBulk(oidsGetBulk, 0, 44);
-                for(VariableBinding var : respostaGetBulk)
-                    System.out.println(var.toString());
-
-                ger.stop();
+        while(true){
+            for(Agente ag: lstAgentes){
+                ger = new Gerenciador(ag);
+                Thread thGer = new Thread(ger);
+                thGer.start();
+                Thread.sleep(tempo * 1000);
             }
-            catch(IOException e)
-            {
-                System.out.println(e.getMessage());
-            }
-
-        /*int i = 0;
-        OID[] oidTable = new OID[]{ifTable};
-        List<List<String>> lstOIDS = ger.getTableAsStrings(oidTable);
-        for(List<String> var : lstOIDS)
-            for(String var1 : var){
-                i++;
-                System.out.println(i + ": " + var1);
-            }*/
-            
-//            try
-//            {
-//                Thread.sleep(tempo * 1000);
-//            }
-//            catch(InterruptedException e)
-//            {}
-//
-//        }
+        }
     }
 
     private  void showMessage(String message, Component parent, String title){
@@ -308,7 +266,7 @@ public class GerenteSNMPView extends FrameView {
         jScrollPane2.setName("jScrollPane2"); // NOI18N
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(new Object [][] { },
-            new String [] {"Maquina (IP)","Comunidade", "Atualizacao (s)"}));
+            new String [] {"Maquina (IP)","Comunidade"}));
     jTable1.setToolTipText(resourceMap.getString("jTable1.toolTipText")); // NOI18N
     jTable1.setName("jTable1"); // NOI18N
     jScrollPane2.setViewportView(jTable1);
@@ -322,70 +280,65 @@ public class GerenteSNMPView extends FrameView {
     mainPanel.setLayout(mainPanelLayout);
     mainPanelLayout.setHorizontalGroup(
         mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
-            .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+        .addGroup(mainPanelLayout.createSequentialGroup()
+            .addContainerGap()
+            .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
+                    .addComponent(jLabel4)
+                    .addGap(3, 3, 3)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(mainPanelLayout.createSequentialGroup()
-                    .addGap(174, 174, 174)
-                    .addComponent(jButton2))
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
-                                .addComponent(jLabel4)
-                                .addGap(3, 3, 3)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(mainPanelLayout.createSequentialGroup()
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(4, 4, 4)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton4))))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(4, 4, 4)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 215, Short.MAX_VALUE))
+                .addGroup(mainPanelLayout.createSequentialGroup()
+                    .addComponent(jButton1)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jButton4)))
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jLabel3)
-                .addGroup(mainPanelLayout.createSequentialGroup()
-                    .addGap(397, 397, 397)
-                    .addComponent(jButton3))
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGap(15, 15, 15))
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(mainPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton2)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton3))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addGap(101, 101, 101))
     );
     mainPanelLayout.setVerticalGroup(
         mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
         .addGroup(mainPanelLayout.createSequentialGroup()
             .addContainerGap()
-            .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addComponent(jLabel3))
-            .addGap(8, 8, 8)
+            .addComponent(jLabel3)
+            .addGap(18, 18, 18)
             .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(mainPanelLayout.createSequentialGroup()
                     .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel1))
+                    .addGap(8, 8, 8)
+                    .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel4))
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel2))
                     .addGap(18, 18, 18)
                     .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jButton1)
                         .addComponent(jButton4)))
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(jButton2)
-                .addComponent(jButton3))
-            .addContainerGap(27, Short.MAX_VALUE))
+                .addGroup(mainPanelLayout.createSequentialGroup()
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel2)
+                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton3)
+                            .addComponent(jButton2)))))
+            .addContainerGap(37, Short.MAX_VALUE))
     );
 
     menuBar.setName("menuBar"); // NOI18N
@@ -429,7 +382,7 @@ public class GerenteSNMPView extends FrameView {
             .addComponent(statusMessageLabel)
             .addGap(73, 73, 73)
             .addGroup(statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(statusPanelSeparator, javax.swing.GroupLayout.DEFAULT_SIZE, 639, Short.MAX_VALUE)
+                .addComponent(statusPanelSeparator, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, statusPanelLayout.createSequentialGroup()
                     .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
