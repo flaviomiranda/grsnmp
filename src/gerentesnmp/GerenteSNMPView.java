@@ -164,6 +164,7 @@ public class GerenteSNMPView extends FrameView {
     }
 
     @Action public void gereciar() throws InterruptedException {
+        Thread thGer;
         tempo = Integer.parseInt(jTextField2.getText());
         for(int i = 0; i < dtModel.getRowCount(); i++)
         {
@@ -174,10 +175,10 @@ public class GerenteSNMPView extends FrameView {
         while(true){
             for(Agente ag: lstAgentes){
                 ger = new Gerenciador(ag);
-                Thread thGer = new Thread(ger);
+                thGer = new Thread(ger);
                 thGer.start();
-                Thread.sleep(tempo * 1000);
             }
+            Thread.sleep(tempo * 1000);
         }
     }
 
