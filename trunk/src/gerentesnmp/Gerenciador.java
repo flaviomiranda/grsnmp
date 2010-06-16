@@ -56,8 +56,9 @@ public class Gerenciador /*implements Runnable*/ {
         try {
             respostaGet = ger.get(oidsGet);
             Monitor mon = new Monitor(respostaGet[1].toString());
+            mon.start();
             if (mon.monitorar()) {
-                for (VariableBinding var : respostaGet) {
+                   for (VariableBinding var : respostaGet) {
                     System.out.println(var.toString());
                     //TODO: SWITCH CASE
                 }
