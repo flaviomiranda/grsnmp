@@ -164,7 +164,7 @@ public class GerenteSNMPView extends FrameView {
     }
 
     @Action public void gereciar() throws InterruptedException {
-        Thread thGer;
+//        Thread thGer;
         tempo = Integer.parseInt(jTextField2.getText());
         for(int i = 0; i < dtModel.getRowCount(); i++)
         {
@@ -172,14 +172,15 @@ public class GerenteSNMPView extends FrameView {
             lstAgentes.add(agente);
         }
 
-        while(true){
-            for(Agente ag: lstAgentes){
-                ger = new Gerenciador(ag);
-                thGer = new Thread(ger);
-                thGer.start();
+//        while(true){
+            for(int i = 0; i < lstAgentes.size(); i++){
+                ger = new Gerenciador(lstAgentes.get(i));
+                lstAgentes.get(i).setIfTable(ger.gerenciar());
+//                thGer = new Thread(ger);
+//                thGer.start();
             }
-            Thread.sleep(tempo * 1000);
-        }
+//            Thread.sleep(tempo * 1000);
+//        }
     }
 
     private  void showMessage(String message, Component parent, String title){
