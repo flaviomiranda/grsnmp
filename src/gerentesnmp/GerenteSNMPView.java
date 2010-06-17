@@ -1,7 +1,6 @@
 /*
  * AgenteSNMPView.java
  */
-
 package gerentesnmp;
 
 import java.awt.Component;
@@ -38,7 +37,7 @@ public class GerenteSNMPView extends FrameView {
 
         lstAgentes = new ArrayList<Agente>();
         initComponents();
-        dtModel = (DefaultTableModel)jTable1.getModel();
+        dtModel = (DefaultTableModel) jTable1.getModel();
         tempo = 0;
         jTextField1.setText("127.0.0.1");
         jTextField2.setText("7");
@@ -47,6 +46,7 @@ public class GerenteSNMPView extends FrameView {
         ResourceMap resourceMap = getResourceMap();
         int messageTimeout = resourceMap.getInteger("StatusBar.messageTimeout");
         messageTimer = new Timer(messageTimeout, new ActionListener() {
+
             public void actionPerformed(ActionEvent e) {
                 statusMessageLabel.setText("");
             }
@@ -57,6 +57,7 @@ public class GerenteSNMPView extends FrameView {
             busyIcons[i] = resourceMap.getIcon("StatusBar.busyIcons[" + i + "]");
         }
         busyIconTimer = new Timer(busyAnimationRate, new ActionListener() {
+
             public void actionPerformed(ActionEvent e) {
                 busyIconIndex = (busyIconIndex + 1) % busyIcons.length;
                 statusAnimationLabel.setIcon(busyIcons[busyIconIndex]);
@@ -69,6 +70,7 @@ public class GerenteSNMPView extends FrameView {
         // connecting action tasks to status bar via TaskMonitor
         TaskMonitor taskMonitor = new TaskMonitor(getApplication().getContext());
         taskMonitor.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 String propertyName = evt.getPropertyName();
                 if ("started".equals(propertyName)) {
@@ -85,11 +87,11 @@ public class GerenteSNMPView extends FrameView {
                     progressBar.setVisible(false);
                     progressBar.setValue(0);
                 } else if ("message".equals(propertyName)) {
-                    String text = (String)(evt.getNewValue());
+                    String text = (String) (evt.getNewValue());
                     statusMessageLabel.setText((text == null) ? "" : text);
                     messageTimer.restart();
                 } else if ("progress".equals(propertyName)) {
-                    int value = (Integer)(evt.getNewValue());
+                    int value = (Integer) (evt.getNewValue());
                     progressBar.setVisible(true);
                     progressBar.setIndeterminate(false);
                     progressBar.setValue(value);
@@ -110,7 +112,7 @@ public class GerenteSNMPView extends FrameView {
         return tempo;
     }
 
-    public void setTempo(int tempo){
+    public void setTempo(int tempo) {
         this.tempo = tempo;
     }
 
@@ -132,58 +134,78 @@ public class GerenteSNMPView extends FrameView {
         GerenteSNMPApp.getApplication().show(aboutBox);
     }
 
-    @Action public void fecharGerente() {
+    @Action
+    public void fecharGerente() {
         System.exit(0);
     }
 
-    @Action public void addAgentes() {
+    @Action
+    public void addAgentes() {
         boolean duplicado = false;
         String ip = jTextField1.getText();
 
-        for(int i =0; i < dtModel.getRowCount(); i++){
-            if(dtModel.getValueAt(i, 0).equals(ip)){
+        for (int i = 0; i < dtModel.getRowCount(); i++) {
+            if (dtModel.getValueAt(i, 0).equals(ip)) {
                 showMessage("IP duplicado!", frame, "Erro");
                 duplicado = true;
                 break;
             }
         }
 
-        if(!duplicado) {
-            dtModel.addRow(new Object [] {jTextField1.getText(), (String)jComboBox1.getSelectedItem()});
+        if (!duplicado) {
+            dtModel.addRow(new Object[]{jTextField1.getText(), (String) jComboBox1.getSelectedItem()});
         }
 
         jTextField1.setText("");
         jComboBox1.setSelectedItem("public");
     }
 
-    @Action public void delAgentes() {
+    @Action
+    public void delAgentes() {
         int[] l = jTable1.getSelectedRows();
-        for(int i = (l.length-1); i >= 0; --i) {
+        for (int i = (l.length - 1); i >= 0; --i) {
             dtModel.removeRow(l[i]);
         }
     }
 
-    @Action public void gereciar() throws InterruptedException {
-//        Thread thGer;
+    @Action
+    public void gereciar() throws InterruptedException {
+//        Thread
+        lstAgentes.clear();
+        Agente auxAg;
         tempo = Integer.parseInt(jTextField2.getText());
-        for(int i = 0; i < dtModel.getRowCount(); i++)
-        {
+
+        for (int i = 0; i < dtModel.getRowCount(); i++) {
             agente = new Agente(dtModel.getValueAt(i, 0).toString(), dtModel.getValueAt(i, 1).toString());
             lstAgentes.add(agente);
         }
 
-//        while(true){
-            for(int i = 0; i < lstAgentes.size(); i++){
+        while (true) {
+            for (int i = 0; i < lstAgentes.size(); i++) {
+                lstAgentes.get(i).setIfInOctetsT2(lstAgentes.get(i).getIfInOctets() != null ? lstAgentes.get(i).getIfInOctets() : "0");
+                lstAgentes.get(i).setIfOutOctetsT2(lstAgentes.get(i).getIfOutOctets() != null ? lstAgentes.get(i).getIfOutOctets() : "0");
+                lstAgentes.get(i).setIpForwDatagramsT2(lstAgentes.get(i).getIpForwDatagrams() != null ? lstAgentes.get(i).getIpForwDatagrams() : "0");
+
                 ger = new Gerenciador(lstAgentes.get(i));
-                lstAgentes.get(i).setIfTable(ger.gerenciar());
+                auxAg = ger.gerenciar();
+                lstAgentes.get(i).setIfTable(auxAg);
+                lstAgentes.get(i).setIps(auxAg);
+                lstAgentes.get(i).setPorcPktsInErr(ger.porcPktsInErr(Double.parseDouble(lstAgentes.get(i).getIfInErrors()), Double.parseDouble(lstAgentes.get(i).getIfInUcastPkts()), Double.parseDouble(lstAgentes.get(i).getIfInNUcastPkts()), Double.parseDouble(lstAgentes.get(i).getIfInDiscards()), Double.parseDouble(lstAgentes.get(i).getIfInUnknownProtos())));
+                lstAgentes.get(i).setTaxBytePerSec(ger.taxBytePerSec(Double.parseDouble(lstAgentes.get(i).getIfInOctets()), Double.parseDouble(lstAgentes.get(i).getIfInOctetsT2()), Double.parseDouble(lstAgentes.get(i).getIfOutOctetsT2()), Double.parseDouble(lstAgentes.get(i).getIfOutOctetsT2()), (double) tempo));
+                lstAgentes.get(i).setUtilLink(ger.utilLink(Double.parseDouble(lstAgentes.get(i).getIfInOctets()), Double.parseDouble(lstAgentes.get(i).getIfInOctetsT2()), Double.parseDouble(lstAgentes.get(i).getIfOutOctets()), Double.parseDouble(lstAgentes.get(i).getIfOutOctetsT2()), Double.parseDouble(lstAgentes.get(i).getIfSpeed()), (double) tempo));
+                lstAgentes.get(i).setPorcDatagramsInErr(ger.porcDatagramsInErr(Double.parseDouble(lstAgentes.get(i).getIpInDiscards()), Double.parseDouble(lstAgentes.get(i).getIpInHdrErrors()), Double.parseDouble(lstAgentes.get(i).getIpInAddrErrors()), Double.parseDouble(lstAgentes.get(i).getIpInUnknownProtos()), Double.parseDouble(lstAgentes.get(i).getIpInReceives())));
+                lstAgentes.get(i).setTaxForwSec(ger.taxForwSec(Double.parseDouble(lstAgentes.get(i).getIpForwDatagramsT2()), Double.parseDouble(lstAgentes.get(i).getIpForwDatagrams()), (double) tempo));
+
+//                ger.geraGrafico(lstAgentes.get(i).getPorcPktsInErr(), lstAgentes.get(i).getTaxBytePerSec(), lstAgentes.get(i).getUtilLink(), lstAgentes.get(i).getPorcDatagramsInErr(), lstAgentes.get(i).getTaxForwSec());
+
 //                thGer = new Thread(ger);
 //                thGer.start();
             }
-//            Thread.sleep(tempo * 1000);
-//        }
+            Thread.sleep(tempo * 1000);
+        }
     }
 
-    private  void showMessage(String message, Component parent, String title){
+    private void showMessage(String message, Component parent, String title) {
         JOptionPane.showMessageDialog(parent, message, title, JOptionPane.ERROR_MESSAGE);
     }
 
@@ -340,7 +362,7 @@ public class GerenteSNMPView extends FrameView {
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton3)
                             .addComponent(jButton2)))))
-            .addContainerGap(37, Short.MAX_VALUE))
+            .addContainerGap(249, Short.MAX_VALUE))
     );
 
     menuBar.setName("menuBar"); // NOI18N
@@ -384,7 +406,7 @@ public class GerenteSNMPView extends FrameView {
             .addComponent(statusMessageLabel)
             .addGap(73, 73, 73)
             .addGroup(statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(statusPanelSeparator, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)
+                .addComponent(statusPanelSeparator, javax.swing.GroupLayout.DEFAULT_SIZE, 546, Short.MAX_VALUE)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, statusPanelLayout.createSequentialGroup()
                     .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -407,7 +429,6 @@ public class GerenteSNMPView extends FrameView {
     setMenuBar(menuBar);
     setStatusBar(statusPanel);
     }// </editor-fold>//GEN-END:initComponents
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -429,12 +450,10 @@ public class GerenteSNMPView extends FrameView {
     private javax.swing.JLabel statusMessageLabel;
     private javax.swing.JPanel statusPanel;
     // End of variables declaration//GEN-END:variables
-
     private final Timer messageTimer;
     private final Timer busyIconTimer;
     private final Icon idleIcon;
     private final Icon[] busyIcons = new Icon[15];
     private int busyIconIndex = 0;
-
     private JDialog aboutBox;
 }

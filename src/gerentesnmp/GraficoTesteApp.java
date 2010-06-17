@@ -5,6 +5,7 @@
 
 package gerentesnmp;
 
+import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,21 +31,6 @@ public class GraficoTesteApp {
         Grafico chart = new Grafico("Teste Bar Chart", lstDadosG);
         chart.pack();
         chart.setVisible(true);
-
-//        List<DadosGrafico> lstDadosG2 = new ArrayList<DadosGrafico>();
-//        DadosGrafico d12 = new DadosGrafico(8.9, "Vermelho", "% Pacotes recebidos c/ erro");
-//        DadosGrafico d22 = new DadosGrafico(4.2, "azul", "Taxa Bytes p/seg");
-//        DadosGrafico d32 = new DadosGrafico(3.7, "amarelo", "Utilização de link");
-//        DadosGrafico d42 = new DadosGrafico(5.05, "preto", "% datagramas IPs rec/erro");
-//        DadosGrafico d52 = new DadosGrafico(2.0, "roxo", "Taxa forwarding");
-//        lstDadosG.add(d12);
-//        lstDadosG.add(d22);
-//        lstDadosG.add(d32);
-//        lstDadosG.add(d42);
-//        lstDadosG.add(d52);
-//        BarsGraphic chart2 = new BarsGraphic("Teste Bar Chart", lstDadosG2);
-//        chart.pack();
-//        chart.setVisible(true);
     }
 
 }

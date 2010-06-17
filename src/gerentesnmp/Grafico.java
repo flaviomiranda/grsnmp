@@ -43,15 +43,6 @@ public class Grafico extends JFrame{
         {
             dataset.addValue(d.getValor(), d.getCor(), d.getTitulo());
         }
-//        dataset.addValue(8.9, "Vermelho", "% Pacotes recebidos c/ erro");
-//        dataset.addValue(4.2, "azul", "Taxa Bytes p/seg");
-//        dataset.addValue(3.7, "amarelo", "Utilização de link");
-//        dataset.addValue(5.05, "preto", "% datagramas IPs rec/erro");
-//        dataset.addValue(2.0, "roxo", "Taxa forwarding");
-//        dataset.addValue(3, "Vermelho", "Gol");
-//        dataset.addValue(2, "Azul", "Corsa");
-//        dataset.addValue(8, "Azul", "Fiesta");
-//        dataset.addValue(1, "Azul", "Gol");
 
         return dataset;
     }
