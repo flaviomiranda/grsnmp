@@ -77,7 +77,7 @@ public class Gerenciador /*implements Runnable*/ {
                             this.agente.setIpInAddrErrors((var1.toString()).substring(index + 1).trim());
                             break;
                         case 6:
-                            this.agente.setIpForwDatagrams((var1.toString()).substring(index + 1).trim());
+                            this.agente.setIpForwDatagramsT2((var1.toString()).substring(index + 1).trim());
                             break;
                         case 7:
                             this.agente.setIpInUnknownProtos((var1.toString()).substring(index + 1).trim());
@@ -153,7 +153,7 @@ public class Gerenciador /*implements Runnable*/ {
                                 break;
                             case 10:
                                 if (var.toString().substring(index - 2, index - 1).equals(nroEthernet)) {
-                                    this.agente.setIfInOctets((var.toString()).substring(index + 1).trim());
+                                    this.agente.setIfInOctetsT2((var.toString()).substring(index + 1).trim());
                                 }
                                 break;
                             case 11:
@@ -183,7 +183,7 @@ public class Gerenciador /*implements Runnable*/ {
                                 break;
                             case 16:
                                 if (var.toString().substring(index - 2, index - 1).equals(nroEthernet)) {
-                                    this.agente.setIfOutOctets((var.toString()).substring(index + 1).trim());
+                                    this.agente.setIfOutOctetsT2((var.toString()).substring(index + 1).trim());
                                 }
                                 break;
                             case 17:
