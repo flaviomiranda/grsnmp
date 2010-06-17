@@ -221,7 +221,13 @@ public class Gerenciador /*implements Runnable*/ {
                 }
                 ger.stop();
             }
-        } catch (IOException e) {
+        }
+        catch(NullPointerException e){
+            System.out.print("\007");
+            System.out.flush();
+            System.out.println("***O agente não está ativo!!!***");
+        }
+        catch (IOException e) {
             System.out.println(e.getMessage());
         }
 

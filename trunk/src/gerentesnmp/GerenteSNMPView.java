@@ -180,32 +180,35 @@ public class GerenteSNMPView extends FrameView {
             agente = new Agente(dtModel.getValueAt(i, 0).toString(), dtModel.getValueAt(i, 1).toString());
             lstAgentes.add(agente);
         }
+        try {
+            while (true) {
+                for (int i = 0; i < lstAgentes.size(); i++) {
+                    lstAgentes.get(i).setIfInOctets(lstAgentes.get(i).getIfInOctetsT2() != null ? lstAgentes.get(i).getIfInOctetsT2() : "0");
+                    lstAgentes.get(i).setIfOutOctets(lstAgentes.get(i).getIfOutOctetsT2() != null ? lstAgentes.get(i).getIfOutOctetsT2() : "0");
+                    lstAgentes.get(i).setIpForwDatagrams(lstAgentes.get(i).getIpForwDatagramsT2() != null ? lstAgentes.get(i).getIpForwDatagramsT2() : "0");
 
-        while (true) {
-            for (int i = 0; i < lstAgentes.size(); i++) {
-                lstAgentes.get(i).setIfInOctets(lstAgentes.get(i).getIfInOctetsT2() != null ? lstAgentes.get(i).getIfInOctetsT2() : "0");
-                lstAgentes.get(i).setIfOutOctets(lstAgentes.get(i).getIfOutOctetsT2() != null ? lstAgentes.get(i).getIfOutOctetsT2() : "0");
-                lstAgentes.get(i).setIpForwDatagrams(lstAgentes.get(i).getIpForwDatagramsT2() != null ? lstAgentes.get(i).getIpForwDatagramsT2() : "0");
+                    ger = new Gerenciador(lstAgentes.get(i));
+                    auxAg = ger.gerenciar();
+                    lstAgentes.get(i).setIfTable(auxAg);
+                    lstAgentes.get(i).setIps(auxAg);
 
-                ger = new Gerenciador(lstAgentes.get(i));
-                auxAg = ger.gerenciar();
-                lstAgentes.get(i).setIfTable(auxAg);
-                lstAgentes.get(i).setIps(auxAg);
-
-                if(cont != 0){
-                    lstAgentes.get(i).setPorcPktsInErr(ger.porcPktsInErr(Double.parseDouble(lstAgentes.get(i).getIfInErrors()), Double.parseDouble(lstAgentes.get(i).getIfInUcastPkts()), Double.parseDouble(lstAgentes.get(i).getIfInNUcastPkts()), Double.parseDouble(lstAgentes.get(i).getIfInDiscards()), Double.parseDouble(lstAgentes.get(i).getIfInUnknownProtos())));
-                    lstAgentes.get(i).setTaxBytePerSec(ger.taxBytePerSec(Double.parseDouble(lstAgentes.get(i).getIfInOctets()), Double.parseDouble(lstAgentes.get(i).getIfInOctetsT2()), Double.parseDouble(lstAgentes.get(i).getIfOutOctetsT2()), Double.parseDouble(lstAgentes.get(i).getIfOutOctetsT2()), (double) tempo));
-                    lstAgentes.get(i).setUtilLink(ger.utilLink(Double.parseDouble(lstAgentes.get(i).getIfInOctets()), Double.parseDouble(lstAgentes.get(i).getIfInOctetsT2()), Double.parseDouble(lstAgentes.get(i).getIfOutOctets()), Double.parseDouble(lstAgentes.get(i).getIfOutOctetsT2()), Double.parseDouble(lstAgentes.get(i).getIfSpeed()), (double) tempo));
-                    lstAgentes.get(i).setPorcDatagramsInErr(ger.porcDatagramsInErr(Double.parseDouble(lstAgentes.get(i).getIpInDiscards()), Double.parseDouble(lstAgentes.get(i).getIpInHdrErrors()), Double.parseDouble(lstAgentes.get(i).getIpInAddrErrors()), Double.parseDouble(lstAgentes.get(i).getIpInUnknownProtos()), Double.parseDouble(lstAgentes.get(i).getIpInReceives())));
-                    lstAgentes.get(i).setTaxForwSec(ger.taxForwSec(Double.parseDouble(lstAgentes.get(i).getIpForwDatagramsT2()), Double.parseDouble(lstAgentes.get(i).getIpForwDatagrams()), (double) tempo));
-                }
-                cont = cont + 1;
+                    if (cont != 0) {
+                        lstAgentes.get(i).setPorcPktsInErr(ger.porcPktsInErr(Double.parseDouble(lstAgentes.get(i).getIfInErrors()), Double.parseDouble(lstAgentes.get(i).getIfInUcastPkts()), Double.parseDouble(lstAgentes.get(i).getIfInNUcastPkts()), Double.parseDouble(lstAgentes.get(i).getIfInDiscards()), Double.parseDouble(lstAgentes.get(i).getIfInUnknownProtos())));
+                        lstAgentes.get(i).setTaxBytePerSec(ger.taxBytePerSec(Double.parseDouble(lstAgentes.get(i).getIfInOctets()), Double.parseDouble(lstAgentes.get(i).getIfInOctetsT2()), Double.parseDouble(lstAgentes.get(i).getIfOutOctetsT2()), Double.parseDouble(lstAgentes.get(i).getIfOutOctetsT2()), (double) tempo));
+                        lstAgentes.get(i).setUtilLink(ger.utilLink(Double.parseDouble(lstAgentes.get(i).getIfInOctets()), Double.parseDouble(lstAgentes.get(i).getIfInOctetsT2()), Double.parseDouble(lstAgentes.get(i).getIfOutOctets()), Double.parseDouble(lstAgentes.get(i).getIfOutOctetsT2()), Double.parseDouble(lstAgentes.get(i).getIfSpeed()), (double) tempo));
+                        lstAgentes.get(i).setPorcDatagramsInErr(ger.porcDatagramsInErr(Double.parseDouble(lstAgentes.get(i).getIpInDiscards()), Double.parseDouble(lstAgentes.get(i).getIpInHdrErrors()), Double.parseDouble(lstAgentes.get(i).getIpInAddrErrors()), Double.parseDouble(lstAgentes.get(i).getIpInUnknownProtos()), Double.parseDouble(lstAgentes.get(i).getIpInReceives())));
+                        lstAgentes.get(i).setTaxForwSec(ger.taxForwSec(Double.parseDouble(lstAgentes.get(i).getIpForwDatagramsT2()), Double.parseDouble(lstAgentes.get(i).getIpForwDatagrams()), (double) tempo));
+                    }
+                    cont = cont + 1;
 //                ger.geraGrafico(lstAgentes.get(i).getPorcPktsInErr(), lstAgentes.get(i).getTaxBytePerSec(), lstAgentes.get(i).getUtilLink(), lstAgentes.get(i).getPorcDatagramsInErr(), lstAgentes.get(i).getTaxForwSec());
 
 //                thGer = new Thread(ger);
 //                thGer.start();
+                }
+                Thread.sleep(tempo * 1000);
             }
-            Thread.sleep(tempo * 1000);
+        }
+        catch(NullPointerException e){
         }
     }
 
