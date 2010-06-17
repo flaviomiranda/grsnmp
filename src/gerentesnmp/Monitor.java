@@ -22,6 +22,8 @@ public class Monitor extends Thread  {
 
     public boolean monitorar(){
         if(sysUpTime.equals("noSuchObject")){
+            System.out.print("\007");
+            System.out.flush();
             System.out.println("***O agente não está ativo!!!***");
             return false;
         }
@@ -31,6 +33,8 @@ public class Monitor extends Thread  {
     public boolean monitorarthread() /*throws Exception*/{
         if(sysUpTime.equals("noSuchObject")){
           //  throw new Exception("Sys down");
+            System.out.print("\007");
+            System.out.flush();
             System.out.println("***O agente não está ativo(from thread)!!!***");
             return false;
         }
