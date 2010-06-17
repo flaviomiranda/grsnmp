@@ -89,7 +89,7 @@
                           </Group>
                       </Group>
                   </Group>
-                  <EmptySpace pref="37" max="32767" attributes="0"/>
+                  <EmptySpace pref="249" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -282,7 +282,7 @@
                   <Component id="statusMessageLabel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="73" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="statusPanelSeparator" alignment="0" pref="544" max="32767" attributes="0"/>
+                      <Component id="statusPanelSeparator" alignment="0" pref="546" max="32767" attributes="0"/>
                       <Group type="102" alignment="1" attributes="0">
                           <Component id="progressBar" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>

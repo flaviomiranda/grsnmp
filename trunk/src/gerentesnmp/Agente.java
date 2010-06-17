@@ -46,6 +46,12 @@ public class Agente {
     private String ipInDiscards;
     private String sysDescr;
     private String sysUpTime;
+    private Double porcPktsInErr;
+    private Double taxBytePerSec;
+    private Double utilLink;
+    private Double porcDatagramsInErr;
+    private Double taxForwSec;
+    private Grafico grafico;
 
     public Agente(String ip, String comunidade) {
         this.ip = ip;
@@ -332,6 +338,54 @@ public class Agente {
         this.sysUpTime = sysUpTime;
     }
 
+    public Double getPorcDatagramsInErr() {
+        return porcDatagramsInErr;
+    }
+
+    public void setPorcDatagramsInErr(Double porcDatagramsInErr) {
+        this.porcDatagramsInErr = porcDatagramsInErr;
+    }
+
+    public Double getPorcPktsInErr() {
+        return porcPktsInErr;
+    }
+
+    public void setPorcPktsInErr(Double porcPktsInErr) {
+        this.porcPktsInErr = porcPktsInErr;
+    }
+
+    public Double getTaxBytePerSec() {
+        return taxBytePerSec;
+    }
+
+    public void setTaxBytePerSec(Double taxBytePerSec) {
+        this.taxBytePerSec = taxBytePerSec;
+    }
+
+    public Double getTaxForwSec() {
+        return taxForwSec;
+    }
+
+    public void setTaxForwSec(Double taxForwSec) {
+        this.taxForwSec = taxForwSec;
+    }
+
+    public Double getUtilLink() {
+        return utilLink;
+    }
+
+    public void setUtilLink(Double utilLink) {
+        this.utilLink = utilLink;
+    }
+
+    public Grafico getGrafico() {
+        return grafico;
+    }
+
+    public void setGrafico(Grafico grafico) {
+        this.grafico = grafico;
+    }
+
     public void setIfTable(Agente ag){
         setIfIndex(ag.getIfIndex());
         setIfDescr(ag.getIfDescr());
@@ -356,5 +410,14 @@ public class Agente {
         setIfOutErrors(ag.getIfOutErrors());
         setIfOutQLen(ag.getIfOutQLen());
         setIfSpecific(ag.getIfSpecific());
+    }
+
+    public void setIps(Agente ag){
+        setIpInReceives(ag.getIpInReceives());
+        setIpInHdrErrors(ag.getIpInHdrErrors());
+        setIpInAddrErrors(ag.getIpInAddrErrors());
+        setIpForwDatagrams(ag.getIpForwDatagrams());
+        setIpInUnknownProtos(getIpInUnknownProtos());
+        setIpInDiscards(getIpInDiscards());
     }
 }
