@@ -20,10 +20,15 @@ public class Gerenciador /*implements Runnable*/ {
     private VariableBinding[] respostaGet;
     private VariableBinding[] respostaGetIps;
     private VariableBinding[] respostaGetBulkIfTable;
-    static final String nroEthernet = "2";
+    private String interf;
+    private int nonRepeaters;
+    private int maxRepetitions;
 
-    public Gerenciador(Agente agente) {
+    public Gerenciador(Agente agente, String interf, int nr, int mr) {
         this.agente = agente;
+        this.interf = interf;
+        this.maxRepetitions = mr;
+        this.nonRepeaters = nr;
     }
 
 //    public void run() {
@@ -97,7 +102,7 @@ public class Gerenciador /*implements Runnable*/ {
                         }
                     }
 
-                    respostaGetBulkIfTable = ger.getBulk(oidsGetBulkIfTable, 0, 44);
+                    respostaGetBulkIfTable = ger.getBulk(oidsGetBulkIfTable, nonRepeaters, maxRepetitions);
                     for (VariableBinding var : respostaGetBulkIfTable) {
                     System.out.println(var.toString());
                         index = var.toString().indexOf("=");
@@ -107,112 +112,112 @@ public class Gerenciador /*implements Runnable*/ {
 //                    System.out.println(var.toString().substring(index-5, index-3).replace('.', ' ').trim());
                         switch (Integer.parseInt(var.toString().substring(index - 5, index - 3).replace('.', ' ').trim())) {
                             case 1:
-                                if (var.toString().substring(index - 2, index - 1).equals(nroEthernet)) {
+                                if (var.toString().substring(index - 2, index - 1).equals(interf)) {
                                     this.agente.setIfIndex((var.toString()).substring(index + 1).trim());
                                 }
                                 break;
                             case 2:
-                                if (var.toString().substring(index - 2, index - 1).equals(nroEthernet)) {
+                                if (var.toString().substring(index - 2, index - 1).equals(interf)) {
                                     this.agente.setIfDescr((var.toString()).substring(index + 1).trim());
                                 }
                                 break;
                             case 3:
-                                if (var.toString().substring(index - 2, index - 1).equals(nroEthernet)) {
+                                if (var.toString().substring(index - 2, index - 1).equals(interf)) {
                                     this.agente.setIfType((var.toString()).substring(index + 1).trim());
                                 }
                                 break;
                             case 4:
-                                if (var.toString().substring(index - 2, index - 1).equals(nroEthernet)) {
+                                if (var.toString().substring(index - 2, index - 1).equals(interf)) {
                                     this.agente.setIfMtu((var.toString()).substring(index + 1).trim());
                                 }
                                 break;
                             case 5:
-                                if (var.toString().substring(index - 2, index - 1).equals(nroEthernet)) {
+                                if (var.toString().substring(index - 2, index - 1).equals(interf)) {
                                     this.agente.setIfSpeed((var.toString()).substring(index + 1).trim());
                                 }
                                 break;
                             case 6:
-                                if (var.toString().substring(index - 2, index - 1).equals(nroEthernet)) {
+                                if (var.toString().substring(index - 2, index - 1).equals(interf)) {
                                     this.agente.setIfPhysAddress((var.toString()).substring(index + 1).trim());
                                 }
                                 break;
                             case 7:
-                                if (var.toString().substring(index - 2, index - 1).equals(nroEthernet)) {
+                                if (var.toString().substring(index - 2, index - 1).equals(interf)) {
                                     this.agente.setIfAdminStatus((var.toString()).substring(index + 1).trim());
                                 }
                                 break;
                             case 8:
-                                if (var.toString().substring(index - 2, index - 1).equals(nroEthernet)) {
+                                if (var.toString().substring(index - 2, index - 1).equals(interf)) {
                                     this.agente.setIfOperStatus((var.toString()).substring(index + 1).trim());
                                 }
                                 break;
                             case 9:
-                                if (var.toString().substring(index - 2, index - 1).equals(nroEthernet)) {
+                                if (var.toString().substring(index - 2, index - 1).equals(interf)) {
                                     this.agente.setIfLastChange((var.toString()).substring(index + 1).trim());
                                 }
                                 break;
                             case 10:
-                                if (var.toString().substring(index - 2, index - 1).equals(nroEthernet)) {
+                                if (var.toString().substring(index - 2, index - 1).equals(interf)) {
                                     this.agente.setIfInOctetsT2((var.toString()).substring(index + 1).trim());
                                 }
                                 break;
                             case 11:
-                                if (var.toString().substring(index - 2, index - 1).equals(nroEthernet)) {
+                                if (var.toString().substring(index - 2, index - 1).equals(interf)) {
                                     this.agente.setIfInUcastPkts((var.toString()).substring(index + 1).trim());
                                 }
                                 break;
                             case 12:
-                                if (var.toString().substring(index - 2, index - 1).equals(nroEthernet)) {
+                                if (var.toString().substring(index - 2, index - 1).equals(interf)) {
                                     this.agente.setIfInNUcastPkts((var.toString()).substring(index + 1).trim());
                                 }
                                 break;
                             case 13:
-                                if (var.toString().substring(index - 2, index - 1).equals(nroEthernet)) {
+                                if (var.toString().substring(index - 2, index - 1).equals(interf)) {
                                     this.agente.setIfInDiscards((var.toString()).substring(index + 1).trim());
                                 }
                                 break;
                             case 14:
-                                if (var.toString().substring(index - 2, index - 1).equals(nroEthernet)) {
+                                if (var.toString().substring(index - 2, index - 1).equals(interf)) {
                                     this.agente.setIfInErrors((var.toString()).substring(index + 1).trim());
                                 }
                                 break;
                             case 15:
-                                if (var.toString().substring(index - 2, index - 1).equals(nroEthernet)) {
+                                if (var.toString().substring(index - 2, index - 1).equals(interf)) {
                                     this.agente.setIfInUnknownProtos((var.toString()).substring(index + 1).trim());
                                 }
                                 break;
                             case 16:
-                                if (var.toString().substring(index - 2, index - 1).equals(nroEthernet)) {
+                                if (var.toString().substring(index - 2, index - 1).equals(interf)) {
                                     this.agente.setIfOutOctetsT2((var.toString()).substring(index + 1).trim());
                                 }
                                 break;
                             case 17:
-                                if (var.toString().substring(index - 2, index - 1).equals(nroEthernet)) {
+                                if (var.toString().substring(index - 2, index - 1).equals(interf)) {
                                     this.agente.setIfOutUcastPkts((var.toString()).substring(index + 1).trim());
                                 }
                                 break;
                             case 18:
-                                if (var.toString().substring(index - 2, index - 1).equals(nroEthernet)) {
+                                if (var.toString().substring(index - 2, index - 1).equals(interf)) {
                                     this.agente.setIfOutNUcastPkts((var.toString()).substring(index + 1).trim());
                                 }
                                 break;
                             case 19:
-                                if (var.toString().substring(index - 2, index - 1).equals(nroEthernet)) {
+                                if (var.toString().substring(index - 2, index - 1).equals(interf)) {
                                     this.agente.setIfOutDiscards((var.toString()).substring(index + 1).trim());
                                 }
                                 break;
                             case 20:
-                                if (var.toString().substring(index - 2, index - 1).equals(nroEthernet)) {
+                                if (var.toString().substring(index - 2, index - 1).equals(interf)) {
                                     this.agente.setIfOutErrors((var.toString()).substring(index + 1).trim());
                                 }
                                 break;
                             case 21:
-                                if (var.toString().substring(index - 2, index - 1).equals(nroEthernet)) {
+                                if (var.toString().substring(index - 2, index - 1).equals(interf)) {
                                     this.agente.setIfOutQLen((var.toString()).substring(index + 1).trim());
                                 }
                                 break;
                             case 22:
-                                if (var.toString().substring(index - 2, index - 1).equals(nroEthernet)) {
+                                if (var.toString().substring(index - 2, index - 1).equals(interf)) {
                                     this.agente.setIfSpecific((var.toString()).substring(index + 1).trim());
                                 }
                                 break;
@@ -232,6 +237,30 @@ public class Gerenciador /*implements Runnable*/ {
         }
 
         return this.agente;
+    }
+
+    public String getInterf() {
+        return interf;
+    }
+
+    public void setInterf(String interf) {
+        this.interf = interf;
+    }
+
+    public int getMaxRepetitions() {
+        return maxRepetitions;
+    }
+
+    public void setMaxRepetitions(int maxRepetitions) {
+        this.maxRepetitions = maxRepetitions;
+    }
+
+    public int getNonRepeaters() {
+        return nonRepeaters;
+    }
+
+    public void setNonRepeaters(int nonRepeaters) {
+        this.nonRepeaters = nonRepeaters;
     }
 
     //metodo porcentagem de pacotes recebidos com erro

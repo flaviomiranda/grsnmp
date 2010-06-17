@@ -41,6 +41,9 @@ public class GerenteSNMPView extends FrameView {
         tempo = 0;
         jTextField1.setText("127.0.0.1");
         jTextField2.setText("7");
+        jTextField3.setText("2");
+        jTextField4.setText("44");
+        jTextField5.setText("0");
 
         // status bar initialization - message timeout, idle icon and busy animation, etc
         ResourceMap resourceMap = getResourceMap();
@@ -187,7 +190,7 @@ public class GerenteSNMPView extends FrameView {
                     lstAgentes.get(i).setIfOutOctets(lstAgentes.get(i).getIfOutOctetsT2() != null ? lstAgentes.get(i).getIfOutOctetsT2() : "0");
                     lstAgentes.get(i).setIpForwDatagrams(lstAgentes.get(i).getIpForwDatagramsT2() != null ? lstAgentes.get(i).getIpForwDatagramsT2() : "0");
 
-                    ger = new Gerenciador(lstAgentes.get(i));
+                    ger = new Gerenciador(lstAgentes.get(i), jTextField3.getText(), Integer.parseInt(jTextField5.getText()), Integer.parseInt(jTextField4.getText()));
                     auxAg = ger.gerenciar();
                     lstAgentes.get(i).setIfTable(auxAg);
                     lstAgentes.get(i).setIps(auxAg);
@@ -239,6 +242,12 @@ public class GerenteSNMPView extends FrameView {
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jButton3 = new javax.swing.JButton();
+        jTextField3 = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jTextField4 = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        jTextField5 = new javax.swing.JTextField();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
         javax.swing.JMenuItem exitMenuItem = new javax.swing.JMenuItem();
@@ -307,6 +316,22 @@ public class GerenteSNMPView extends FrameView {
     jButton3.setToolTipText(resourceMap.getString("btnFechar.toolTipText")); // NOI18N
     jButton3.setName("btnFechar"); // NOI18N
 
+    jTextField3.setText(resourceMap.getString("txtInterface.text")); // NOI18N
+    jTextField3.setName("txtInterface"); // NOI18N
+
+    jLabel5.setText(resourceMap.getString("lblInterface.text")); // NOI18N
+    jLabel5.setName("lblInterface"); // NOI18N
+
+    jLabel6.setText(resourceMap.getString("lblMaxRep.text")); // NOI18N
+    jLabel6.setName("lblMaxRep"); // NOI18N
+
+    jTextField4.setName("txtNroObj"); // NOI18N
+
+    jLabel7.setText(resourceMap.getString("lblNonRep.text")); // NOI18N
+    jLabel7.setName("lblNonRep"); // NOI18N
+
+    jTextField5.setName("jTextField5"); // NOI18N
+
     javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
     mainPanel.setLayout(mainPanelLayout);
     mainPanelLayout.setHorizontalGroup(
@@ -321,11 +346,24 @@ public class GerenteSNMPView extends FrameView {
                 .addGroup(mainPanelLayout.createSequentialGroup()
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(4, 4, 4)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 215, Short.MAX_VALUE))
+                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE))
                 .addGroup(mainPanelLayout.createSequentialGroup()
-                    .addComponent(jButton1)
+                    .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jLabel5)
+                        .addComponent(jButton1))
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(jButton4)))
+                    .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jButton4)
+                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jTextField3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, mainPanelLayout.createSequentialGroup()
+                                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel6)
+                                    .addComponent(jLabel7))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jTextField4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
+                                    .addComponent(jTextField5, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)))))))
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jLabel3)
@@ -339,14 +377,14 @@ public class GerenteSNMPView extends FrameView {
                         .addGap(18, 18, 18)
                         .addComponent(jButton3))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)))
-            .addGap(101, 101, 101))
+            .addContainerGap())
     );
     mainPanelLayout.setVerticalGroup(
         mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
         .addGroup(mainPanelLayout.createSequentialGroup()
             .addContainerGap()
             .addComponent(jLabel3)
-            .addGap(18, 18, 18)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(mainPanelLayout.createSequentialGroup()
                     .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -359,7 +397,11 @@ public class GerenteSNMPView extends FrameView {
                     .addGap(18, 18, 18)
                     .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jButton1)
-                        .addComponent(jButton4)))
+                        .addComponent(jButton4))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel5)))
                 .addGroup(mainPanelLayout.createSequentialGroup()
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -369,7 +411,15 @@ public class GerenteSNMPView extends FrameView {
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton3)
                             .addComponent(jButton2)))))
-            .addContainerGap(249, Short.MAX_VALUE))
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel6))
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(jLabel7)
+                .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGap(51, 51, 51))
     );
 
     menuBar.setName("menuBar"); // NOI18N
@@ -413,7 +463,7 @@ public class GerenteSNMPView extends FrameView {
             .addComponent(statusMessageLabel)
             .addGap(73, 73, 73)
             .addGroup(statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(statusPanelSeparator, javax.swing.GroupLayout.DEFAULT_SIZE, 546, Short.MAX_VALUE)
+                .addComponent(statusPanelSeparator, javax.swing.GroupLayout.DEFAULT_SIZE, 594, Short.MAX_VALUE)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, statusPanelLayout.createSequentialGroup()
                     .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -446,10 +496,16 @@ public class GerenteSNMPView extends FrameView {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField jTextField4;
+    private javax.swing.JTextField jTextField5;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JProgressBar progressBar;
